@@ -2,19 +2,17 @@ import requests
 import streamlit as st
 import os
 
-# =============================
+
 # CONFIG
-# =============================
 # Proper way to select API base:
-API_BASE = os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
-# For deployed: "https://movie-rec-466x.onrender.com"
+API_BASE = os.getenv("API_BASE_URL", "http://127.0.0.1:8000") # For deployed: "https://movie-rec-466x.onrender.com"
+
 TMDB_IMG = "https://image.tmdb.org/t/p/w500"
 
-st.set_page_config(page_title="Movie Recommender", page_icon="🎬", layout="wide")
+st.set_page_config(page_title="Movie Recommendation System", page_icon="🎬", layout="wide")
 
-# =============================
+
 # STYLES (minimal modern)
-# =============================
 st.markdown(
     """
 <style>
@@ -27,15 +25,14 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# =============================
+
 # STATE + ROUTING (single-file pages)
-# =============================
 if "view" not in st.session_state:
     st.session_state.view = "home"  # home | details
 if "selected_tmdb_id" not in st.session_state:
     st.session_state.selected_tmdb_id = None
 
-# Read query params correctly (new API)
+
 # Read query params
 qp_view = st.query_params.get("view")
 qp_id = st.query_params.get("id")
@@ -63,9 +60,8 @@ def goto_details(tmdb_id: int):
     st.query_params["view"] = "details"
     st.query_params["id"] = str(tmdb_id)
     st.rerun()
-# =============================
+
 # API HELPERS
-# =============================
 @st.cache_data(ttl=30)  # short cache for autocomplete
 def api_get_json(path: str, params: dict | None = None):
     try:
@@ -126,12 +122,8 @@ def to_cards_from_tfidf_items(tfidf_items):
     return cards
 
 
-# =============================
+
 # Robust TMDB search parsing
-# Supports BOTH API shapes:
-# 1) raw TMDB: {"results":[{id,title,poster_path,...}]}
-# 2) list cards: [{tmdb_id,title,poster_url,...}]
-# =============================
 def parse_tmdb_search_to_cards(data, keyword: str, limit: int = 24):
     keyword_l = keyword.strip().lower()
 
@@ -187,9 +179,8 @@ def parse_tmdb_search_to_cards(data, keyword: str, limit: int = 24):
     return suggestions, cards
 
 
-# =============================
+
 # SIDEBAR
-# =============================
 with st.sidebar:
     st.markdown("## 🎬 Menu")
     if st.button("🏠 Home"):
@@ -204,9 +195,8 @@ with st.sidebar:
     )
     grid_cols = st.slider("Grid columns", 4, 8, 6)
 
-# =============================
+
 # HEADER
-# =============================
 st.title("🎬 Movie Recommender")
 st.markdown(
     "<div class='small-muted'>Type keyword → dropdown suggestions + matching results → open → details + recommendations</div>",
@@ -214,9 +204,8 @@ st.markdown(
 )
 st.divider()
 
-# =============================
+
 # VIEW: HOME
-# =============================
 if st.session_state.view == "home":
     typed = st.text_input(
         "Search by movie title (keyword)", placeholder="Type: avenger, batman, love..."
@@ -263,9 +252,8 @@ if st.session_state.view == "home":
 
     poster_grid(home_cards, cols=grid_cols, key_prefix="home_feed")
 
-# =============================
+
 # VIEW: DETAILS
-# =============================
 elif st.session_state.view == "details":
     tmdb_id = st.session_state.selected_tmdb_id
     if not tmdb_id:
