@@ -57,3 +57,35 @@ def to_cards(results: List[dict], limit: int):
         )
         for m in results[:limit]
     ]
+
+
+async def recommend_by_genre(tmdb_id: int, limit: int = 12) -> List[TMDBMovieCard]:
+    # 1. Get the original movie to extract genres
+    movie = await movie_details(tmdb_id)
+    
+    if not movie.genres:
+        return []
+
+    # 2. Get genre IDs 
+    genre_ids = [g["id"] for g in movie.genres]
+    genre_ids_str = ",".join(str(gid) for gid in genre_ids)
+
+    # 3. Search TMDB for movies with these genres
+    # Note: TMDB's discover endpoint allows filtering by genre
+    params = {
+        "with_genres": genre_ids_str,
+        "sort_by": "popularity.desc",
+        "include_adult": False,
+        "language": "en-US",
+        "page": 1,
+        "vote_count.gte": 10,  # avoid obscure movies
+    }
+
+    data = await tmdb_get("/discover/movie", params)
+    results = data.get("results", [])
+
+    # 4. Remove the original movie from results (if present)
+    filtered = [m for m in results if m.get("id") != tmdb_id]
+
+    # 5. Convert to cards and limit
+    return to_cards(filtered, limit)
