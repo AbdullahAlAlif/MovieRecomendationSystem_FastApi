@@ -6,7 +6,7 @@ Here’s a professional, production-ready `README.md` file for your GitHub repos
 
 > A full-stack, production-grade movie recommendation engine built with FastAPI (backend), Streamlit (frontend), and scikit-learn (ML). Trained using TF-IDF and genre-based similarity on TMDB data.
 
-![Movie Recommender Demo](img\Home.png)  
+![Movie Recommender Demo](img/Home.png)  
 
 
 ---
@@ -88,7 +88,7 @@ Returns service status (for deployment monitoring).
 
 > ✅ All endpoints are documented via Swagger UI at `/docs` when running locally.
 
-![Api docs](img\Api.png)  
+![Api docs](img/Api.png)  
 
 ---
 
@@ -123,9 +123,9 @@ Built with modern, responsive design:
 
 📸 *Screenshots !*  
 
-![Search](img\Search.png) 
+![Search](img/Search.png) 
 
-![Details Page](img\Details.png) 
+![Details Page](img/Details.png) 
 
 ---
 
