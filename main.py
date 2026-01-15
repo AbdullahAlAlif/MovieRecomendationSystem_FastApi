@@ -10,7 +10,7 @@ app = FastAPI(title="Movie Recommendation System", version="3.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["movierecomendationsystemfastapi.streamlit.app"],
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
